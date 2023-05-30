@@ -1,41 +1,38 @@
-const controls = document.getElementById("controls");
-const input = controls.querySelector("input");
-const createBtn = controls.querySelector("button[data-create]");
-const destroyBtn = controls.querySelector("button[data-destroy]");
-const boxesContainer = document.getElementById("boxes");
+function getRandomHexColor() {
+  return `#${Math.floor(Math.random() * 16777215).toString(16)}`;
+}
 
-createBtn.addEventListener("click", createBoxes);
-destroyBtn.addEventListener("click", destroyBoxes);
+const btnCreate = document.querySelector("#controls button[data-create]");
+const btnDestroy = document.querySelector("#controls button[data-destroy]");
+const boxes = document.querySelector("#boxes");
+const amount = document.querySelector("#controls input");
+let width = 30;
+let height = 30;
+
+btnCreate.addEventListener("click", createBoxes);
+btnDestroy.addEventListener("click", destroyBoxes);
 
 function createBoxes() {
-  const amount = parseInt(input.value);
+  const newAmount = Number(amount.value);
 
-  if (isNaN(amount)) {
-    return;
+  const fragment = document.createDocumentFragment();
+
+  for (let i = 0; i < newAmount; i++) {
+    const newBox = document.createElement("div");
+    newBox.style.backgroundColor = getRandomHexColor();
+    newBox.style.width = `${width}px`;
+    newBox.style.height = `${height}px`;
+    fragment.appendChild(newBox);
+    width += 10;
+    height += 10;
   }
 
-  destroyBoxes();
-
-  let size = 30;
-
-  for (let i = 0; i < amount; i++) {
-    const box = document.createElement("div");
-    box.style.width = `${size}px`;
-    box.style.height = `${size}px`;
-    box.style.backgroundColor = getRandomHexColor();
-
-    boxesContainer.appendChild(box);
-
-    size += 10;
-  }
+  boxes.appendChild(fragment);
 }
 
 function destroyBoxes() {
-  boxesContainer.innerHTML = "";
-}
-
-function getRandomHexColor() {
-  return `#${Math.floor(Math.random() * 16777215)
-    .toString(16)
-    .padStart(6, "0")}`;
+  boxes.innerHTML = "";
+  amount.value = "";
+  width = 30;
+  height = 30;
 }
